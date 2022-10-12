@@ -4,6 +4,7 @@ import useLanguage from "../utils/useLanguage";
 import ImageUpload from "./ImageUpload";
 import { authHost } from "../utils/https";
 import { team } from "../utils/urls";
+import { validate } from "../utils/helpers";
 
 const initial = {
   name: "",
@@ -21,6 +22,7 @@ const inputErrors = {
   image: false,
 };
 
+
 const TeamDrawer = ({
   open,
   setOpen,
@@ -33,22 +35,15 @@ const TeamDrawer = ({
   const translate = useLanguage();
   const [data, setData] = useState(initial);
   const [fileList, setFileList] = useState([]);
-  const [err, setErr] = useState(inputErrors);
+    const [err, setErr] = useState(inputErrors);
 
-  const validate = (name, value) => {
-    let clone = { ...err };
-    if (value.length === 0) {
-      clone[name] = true;
-    } else {
-      clone[name] = false;
-    }
-    setErr(clone);
-  };
+
+ 
 
   const onChange = (e) => {
     let name = e.target.name;
     let value = e.target.value;
-    validate(name, value);
+    validate(name, value, err, setErr);
     setData({ ...data, [name]: value });
   };
 

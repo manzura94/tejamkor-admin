@@ -46,4 +46,16 @@ export const slugify = (text) =>
       return [deleteA(header), deleteA(payload), deleteA(signature)].join(".");
     }
 
+
+
+    export  const validate = (name, value, err, setErr) => {
+      let clone = { ...err };
+      if (value.length === 0) {
+        clone[name] = true;
+      } else {
+        clone[name] = false;
+      }
+      setErr(clone);
+    };
+
     

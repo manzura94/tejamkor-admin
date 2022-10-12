@@ -56,13 +56,7 @@ export const routes = [
   
 ];
 
-export const loginRoutes =[
-  {
-    id:1,
-    path:"/login",
-    component: <LoginPage />
-  }
-]
+
 
 
 export const menubar = [

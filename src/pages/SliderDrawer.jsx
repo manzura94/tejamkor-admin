@@ -46,7 +46,7 @@ const SliderDrawer = ({
     setErr(inputErrors);
   };
 
-  const validate = (name, value) => {
+  const validate = (name, value,err, setErr) => {
     let clone = { ...err };
     if (value.length === 0) {
       clone[name] = true;
