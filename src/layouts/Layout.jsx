@@ -103,7 +103,7 @@ const $Layout = () => {
         </Layout>
       ) : (
         <Routes>
-          <Route path="/login" element={<LoginPage />} />
+          <Route path="/" element={<LoginPage />} />
           <Route path="/logout" element={<Navigate to="/login" replace />} />
         </Routes>
       )}
