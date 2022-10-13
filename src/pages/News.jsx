@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Button, Popconfirm, Space, Table } from "antd";
 import { QuestionCircleOutlined } from "@ant-design/icons";
-import NewsDriwer from "../pages/NewsDriwer";
+import NewsDriwer from "../Components/NewsDriwer";
 import { authHost } from "../utils/https";
 import { news } from "../utils/urls";
 import useLanguage from "../utils/useLanguage";
@@ -47,8 +47,7 @@ const News = () => {
 
   useEffect(() => {
     fetchNewsList();
-    const local = localStorage.getItem("hi");
-    console.log(local);
+
   }, []);
 
   return (

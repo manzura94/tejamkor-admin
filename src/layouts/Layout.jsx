@@ -105,6 +105,7 @@ const $Layout = () => {
         <Routes>
           <Route path="/" element={<LoginPage />} />
           <Route path="/logout" element={<Navigate to="/login" replace />} />
+          <Route path="/login" element={<Navigate to="/" replace/>}/>
         </Routes>
       )}
     </>

@@ -2,10 +2,11 @@ import React, { useState, useEffect } from "react";
 import { Button, Drawer } from "antd";
 import ReactQuill from "react-quill";
 import useLanguage from "../utils/useLanguage";
-import ImageUpload from "./ImageUpload";
-import { slugify } from "../utils/helpers";
+import ImageUpload from "../pages/ImageUpload";
+import { slugify, validate } from "../utils/helpers";
 import { authHost } from "../utils/https";
 import { services } from "../utils/urls";
+
 
 
 const initial = {
@@ -52,20 +53,10 @@ const ServicesDrawer = ({
     setSelected(0);
   };
 
-  const validate = (name, value) => {
-    let clone = { ...err };
-    if (value.length === 0) {
-      clone[name] = true;
-    } else {
-      clone[name] = false;
-    }
-    setErr(clone);
-  };
-
   const onChange = (e) => {
     let name = e.target.name;
     let value = e.target.value;
-    validate(name, value);
+    validate(name, value,err, setErr);
     setData({
       ...data,
       [name]: value,

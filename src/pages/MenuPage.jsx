@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Button,  Collapse } from "antd";
 import { CaretRightOutlined } from "@ant-design/icons";
 import useLanguage from "../utils/useLanguage";
-import MenuPageDrawer from "../pages/MenuPageDrawer";
+import MenuPageDrawer from "../Components/MenuPageDrawer";
 import {sortMenu} from "../utils/helpers";
 
 const { Panel } = Collapse;

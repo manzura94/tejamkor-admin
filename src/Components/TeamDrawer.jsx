@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Button, Drawer } from "antd";
 import useLanguage from "../utils/useLanguage";
-import ImageUpload from "./ImageUpload";
+import ImageUpload from "../pages/ImageUpload";
 import { authHost } from "../utils/https";
 import { team } from "../utils/urls";
 import { validate } from "../utils/helpers";

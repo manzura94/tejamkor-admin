@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { Button, Drawer } from "antd";
-import { Telegram, Instagram, Facebook, Youtube } from "../Components/icons";
-import ImageUpload from "./ImageUpload";
+import { Telegram, Instagram, Facebook, Youtube } from "./icons";
+import ImageUpload from "../pages/ImageUpload";
 import { authHost } from "../utils/https";
 import { company } from "../utils/urls";
 import useLanguage from "../utils/useLanguage";
+import { validate } from "../utils/helpers";
 
 const initial = {
   name: "",
@@ -60,27 +61,18 @@ const CompanyDrawer = ({
     setErr(inputErrors)
   };
 
-  const validate = (name, value) => {
-    let cloneError = { ...err };
-    if (value.length == 0) {
-      cloneError[name] = true;
-    } else {
-      cloneError[name] = false;
-    }
-    setErr(cloneError);
-  };
+ 
 
   const onChange = (e) => {
     e.preventDefault();
     let name = e.target.name;
     let value = e.target.value;
-    validate(name, value);
+    validate(name, value, err, setErr);
     setData({ ...data, [name]: value });
   };
 
   const onAddSubmit = async () => {
     const res = await authHost.post(`${company}`, data);
-    console.log(res.data);
     fetchCompany();
     setData(res.data);
     setOpen(false);
@@ -91,7 +83,6 @@ const CompanyDrawer = ({
   const onEditSubmit = async () => {
     let id = selectCompany.id;
     const res = await authHost.patch(`${company}/${id}`, data);
-    console.log(res.data);
     setData(res.data.data);
     fetchCompany();
     setOpen(false);

@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Button, Drawer } from "antd";
 import ReactQuill from "react-quill";
-import ImageUpload from "./ImageUpload";
+import ImageUpload from "../pages/ImageUpload";
 import { authHost } from "../utils/https";
 import { news } from "../utils/urls";
 import useLanguage from "../utils/useLanguage";
+import { validate } from "../utils/helpers";
+
 
 const initial = {
   title: "",
@@ -93,20 +95,10 @@ const NewsDriwer = ({
 
  
 
-  const validate = (name, value) => {
-    let clone = { ...err };
-    if (value.length === 0) {
-      clone[name] = true;
-    } else {
-      clone[name] = false;
-    }
-    setErr(clone);
-  };
-
   const onChange = (e) => {
     let name = e.target.name;
     let value = e.target.value;
-    validate(name, value);
+    validate(name, value,err, setErr);
     setData({
       ...data,
       [e.target.name]: e.target.value,
@@ -114,7 +106,6 @@ const NewsDriwer = ({
       content_ru: data.content_ru
     });
   };
-  console.log(data);
 
   useEffect(() => {
     if (select) {

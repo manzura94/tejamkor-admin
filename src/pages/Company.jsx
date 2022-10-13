@@ -1,7 +1,7 @@
 import React, { useState, useEffect,useContext } from "react";
 import { Button, Popconfirm, Space, Table } from "antd";
 import { QuestionCircleOutlined } from "@ant-design/icons";
-import CompanyDrawer from "../pages/CompanyDrawer";
+import CompanyDrawer from "../Components/CompanyDrawer";
 import { authHost } from "../utils/https";
 import { company } from "../utils/urls";
 import useLanguage from "../utils/useLanguage";

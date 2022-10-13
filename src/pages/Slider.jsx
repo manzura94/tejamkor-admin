@@ -2,7 +2,7 @@ import React, { useState,useEffect,useContext } from "react";
 import { Button, Popconfirm, Space, Table } from "antd";
 import { QuestionCircleOutlined } from "@ant-design/icons";
 import useLanguage from "../utils/useLanguage";
-import SliderDrawer from "../pages/SliderDrawer";
+import SliderDrawer from "../Components/SliderDrawer";
 import { authHost } from "../utils/https";
 import { slider } from "../utils/urls";
 import { LangActive } from "../context/LangActive";

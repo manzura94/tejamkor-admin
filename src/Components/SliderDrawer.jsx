@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Button, Drawer } from "antd";
-import ImageUpload from "./ImageUpload";
-import { authHost } from "../utils/https";
-import { companyslider } from "../utils/urls";
 import useLanguage from "../utils/useLanguage";
+import ImageUpload from "../pages/ImageUpload";
+import { authHost } from "../utils/https";
+import { slider } from "../utils/urls";
+import { validate } from "../utils/helpers";
 
-let initial = {
+const initial = {
   title: "",
   title_ru: "",
   subtitle: "",
@@ -23,90 +24,79 @@ const inputErrors = {
   video: false,
 };
 
-const AddCompanySlider = ({
+const SliderDrawer = ({
   open,
   setOpen,
-  selected,
+  select,
+  setSelect,
   isEditing,
-  setSelected,
   setIsEditing,
-  fetchCompanySlider,
+  fetchSlider,
 }) => {
   const translate = useLanguage();
-
-  const [data, setData] = useState(initial);
   const [fileList, setFileList] = useState([]);
+  const [data, setData] = useState(initial);
   const [err, setErr] = useState(inputErrors);
 
   const onClose = () => {
     setOpen(false);
-    setData(initial);
-    setSelected(0);
     setIsEditing(false);
+    setSelect(0);
+    setData(initial);
     setFileList([]);
     setErr(inputErrors);
   };
 
-  const onAddNewSlider = async () => {
-    const res = await authHost.post(`${companyslider}`, data);
-    setData(res.data);
-    fetchCompanySlider();
-    setOpen(false);
-    setFileList([]);
-    setData(initial);
-  };
-
-  const onEditCompanySlider = async () => {
-    let id = data.id;
-    const res = await authHost.patch(`${companyslider}/${id}`, data);
-    setData(res.data.data);
-    fetchCompanySlider();
-    setOpen(false);
-    setFileList([]);
-    setData(initial);
-    setIsEditing(false);
-  };
-
-  const validate = (name, value) => {
-    let errorClone = { ...err };
-    if (value.length === 0) {
-      errorClone[name] = true;
-    } else {
-      errorClone[name] = false;
-    }
-    setErr(errorClone);
-  };
-
-  const handleInputChange = (e) => {
+  const onChange = (e) => {
     let name = e.target.name;
     let value = e.target.value;
-    validate(name, value);
+    validate(name, value, err, setErr);
     setData({ ...data, [name]: value });
+  };
+
+  const addSliderHandle = async () => {
+    const res = await authHost.post(`${slider}`, data);
+    setData(res.data);
+    fetchSlider();
+    setOpen(false);
+    setFileList([]);
+    setData(initial);
+  };
+
+  const editSliderHandle = async () => {
+    let id = data.id;
+    const res = await authHost.patch(`${slider}/${id}`, data);
+    setData(res.data.data);
+    fetchSlider();
+    setIsEditing(false);
+    setFileList([]);
+    setSelect(0);
+    setData(initial);
+    setOpen(false);
   };
 
   const onSubmit = (e) => {
     e.preventDefault();
-    let errorClone = { ...err };
+    let clone = { ...err };
     for (let key in data) {
       let el = data[key];
       if (el.length === 0) {
-        errorClone[key] = true;
+        clone[key] = true;
       }
     }
-    setErr(errorClone);
+    setErr(clone);
 
-    let value = Object.values(errorClone).every((item) => item === false);
-
+    let value = Object.values(clone).every((item) => item === false);
     if (value) {
-      isEditing ? onEditCompanySlider() : onAddNewSlider();
+      isEditing ? editSliderHandle() : addSliderHandle();
     }
   };
 
   useEffect(() => {
-    if (selected) {
-      setData(selected);
+    if (select) {
+      setData(select);
     }
-  }, [selected]);
+  }, [select]);
 
   return (
     <Drawer
@@ -116,8 +106,8 @@ const AddCompanySlider = ({
       open={open}
       width={"70%"}
     >
-      <div className="companySlider__form-container">
-        <form className="companyForm" onSubmit={(e) => onSubmit(e)}>
+      <div className="form-container">
+        <form className="companyForm">
           <div className="form__sections">
             <div className="form__sections-section">
               <label htmlFor="title">{translate("Title")}</label>
@@ -126,12 +116,13 @@ const AddCompanySlider = ({
                 id="title"
                 name="title"
                 value={data.title}
-                onChange={(e) => handleInputChange(e)}
+                onChange={(e) => onChange(e)}
                 className={err?.title ? "error" : "input-default"}
+
               />
-              {err?.title && (
-                <span className="errorSpan">{translate("Enter title")}</span>
-              )}
+              {err?.title && <span className= "errorSpan">
+                {translate("Enter title")}
+              </span>}
             </div>
             <div className="form__sections-section">
               <label htmlFor="title_ru">{translate("Title in russian")}</label>
@@ -140,14 +131,13 @@ const AddCompanySlider = ({
                 id="title_ru"
                 name="title_ru"
                 value={data.title_ru}
-                onChange={(e) => handleInputChange(e)}
+                onChange={(e) => onChange(e)}
                 className={err?.title_ru ? "error" : "input-default"}
+
               />
-              {err?.title_ru && (
-                <span className="errorSpan">
-                  {translate("Enter title in russian")}
-                </span>
-              )}
+              {err?.title_ru && <span className= "errorSpan">
+                {translate("Enter title in russian")}
+              </span>}
             </div>
           </div>
           <div className="form__sections">
@@ -158,12 +148,13 @@ const AddCompanySlider = ({
                 id="subtitle"
                 name="subtitle"
                 value={data.subtitle}
+                onChange={(e) => onChange(e)}
                 className={err?.subtitle ? "error" : "input-default"}
-                onChange={(e) => handleInputChange(e)}
+
               />
-              {err?.subtitle && (
-                <span className="errorSpan">{translate("Enter subtitle")}</span>
-              )}
+              {err?.subtitle && <span className= "errorSpan">
+                {translate("Enter subtitle")}
+              </span>}
             </div>
             <div className="form__sections-section">
               <label htmlFor="subtitle_ru">
@@ -172,50 +163,53 @@ const AddCompanySlider = ({
               <input
                 type="text"
                 id="subtitle_ru"
-                className={err?.subtitle_ru ? "error" : "input-default"}
                 name="subtitle_ru"
                 value={data.subtitle_ru}
-                onChange={(e) => handleInputChange(e)}
+                onChange={(e) => onChange(e)}
+                className={err?.subtitle_ru ? "error" : "input-default"}
+
               />
-              {err?.subtitle_ru && (
-                <span className="errorSpan">
-                  {translate("Enter subtitle in russian")}
-                </span>
-              )}
+              {err?.subtitle_ru && <span className= "errorSpan">
+                {translate("Enter subtitle in russian")}
+              </span>}
             </div>
           </div>
           <div className="form__sections">
             <div className="form__image-cont">
               <label htmlFor="image">{translate("Image")}</label>
-
               <ImageUpload
-                jsonData={data}
-                setJsonData={setData}
                 fileList={fileList}
                 setFileList={setFileList}
+                jsonData={data}
+                setJsonData={setData}
                 validate={validate}
                 err={err}
               />
-              {err?.image && (
-                <span className="errorSpan">{translate("Submit image")}</span>
-              )}
+              {err?.image && <span className= "errorSpan">
+                {translate("Submit image")}
+              </span>}
             </div>
             <div className="form__sections-section">
               <label htmlFor="video">{translate("Submit video")}</label>
               <input
                 type="text"
                 id="video"
-                className={err?.video ? "error" : "input-default"}
                 name="video"
                 value={data.video}
-                onChange={(e) => handleInputChange(e)}
+                onChange={(e) => onChange(e)}
+                className={err?.video ? "error" : "input-default"}
+
               />
-              {err?.video && (
-                <span className="errorSpan">{translate("Link for video")}</span>
-              )}
+              {err?.video && <span className= "errorSpan">
+                {translate("Link for video")}
+              </span>}
             </div>
           </div>
-          <Button htmlType="submit" className="form__submit-btn" type="primary">
+          <Button
+            type="primary"
+            className="form__submit-btn"
+            onClick={(e) => onSubmit(e)}
+          >
             {translate("Save")}
           </Button>
         </form>
@@ -224,4 +218,4 @@ const AddCompanySlider = ({
   );
 };
 
-export default AddCompanySlider;
+export default SliderDrawer;

@@ -1,13 +1,12 @@
 
-import Company from "../Components/Company";
-import CompanySlider from "../Components/CompanySlider";
-import MenuPage from "../Components/MenuPage";
-import News from "../Components/News";
-import Services from "../Components/Services";
-import Slider from "../Components/Slider";
-import Team from "../Components/Team";
-import LoginPage from "../pages/LoginPage";
+import Company from "../pages/Company";
+import MenuPage from "../pages/MenuPage";
+import News from "../pages/News";
+import Services from "../pages/Services";
+import Slider from "../pages/Slider";
+import Team from "../pages/Team";
 import LogOutPage from "../pages/LogOutPage";
+import CompanySlider from "../pages/CompanySlider";
 
  
 

@@ -1,55 +1,60 @@
-import React, { useState, useEffect,useContext } from "react";
-import { Button, Popconfirm, Space, Table } from "antd";
+import React, { useState,useContext } from "react";
+import { Space, Table, Button, Popconfirm } from "antd";
 import { QuestionCircleOutlined } from "@ant-design/icons";
-import ServicesDrawer from "../pages/ServicesDrawer";
-import useLanguage from "../utils/useLanguage";
+import AddCompanySlider from "../Components/AddCompanySlider";
 import { authHost } from "../utils/https";
-import { services } from "../utils/urls";
+import { useEffect } from "react";
+import { companyslider } from "../utils/urls";
+import useLanguage from "../utils/useLanguage";
 import { LangActive } from "../context/LangActive";
 import { LoadingContext } from "../context/LoadingContext";
 
 const { Column } = Table;
 
-
-
-const Services = () => {
+const CompanySlider = () => {
   const translate = useLanguage();
-  const langUz = LangActive()
+  const langUz = LangActive();
   const {loading, setLoading}=useContext(LoadingContext)
 
+  const [companySlider, setCompanySlider] = useState([]);
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState(null);
-  const [edit, setEdit] = useState(false);
-  const [service, setService] = useState([]);
+  const [isEditing, setIsEditing] = useState(false);
 
-  const addServicesOpen = () => {
+  const addNewSlider = () => {
     setOpen(true);
   };
 
-  const editServiceOpen = (item) => {
+  const editCompanySlider = (record) => {
     setOpen(true);
-    setEdit(true);
-    setSelected(item);
+    setSelected(record);
+    setIsEditing(true);
   };
 
-  const fetchServices =async () => {
+  const deleteCompanySlider = async (record) => {
+    let id = record.id;
+    await authHost.delete(`${companyslider}/${id}`, companySlider);
+    let filtered = companySlider.filter((item) => item.id !== id);
+    setCompanySlider(filtered);
+  };
+
+  const fetchCompanySlider = async () => {
     setLoading(true)
-    const res = await authHost.get(`${services}`, service);
-    setService(res.data.data);
+    const res = await authHost.get(`${companyslider}`, companySlider);
+    setCompanySlider(res.data.data);
     setLoading(false)
   };
 
   useEffect(() => {
-    fetchServices();
+    fetchCompanySlider();
   }, []);
-
   return (
     <div>
       <Button
       loading={loading}
         className="table__addRow-btn"
         type="primary"
-        onClick={addServicesOpen}
+        onClick={addNewSlider}
         style={{
           marginBottom: 16,
         }}
@@ -57,11 +62,11 @@ const Services = () => {
         {translate("Add")}
       </Button>
       <Table
-        dataSource={service}
-        loading={loading}
+        dataSource={companySlider}
         pagination={false}
         rowKey="id"
-        className="company__table"
+        className="listTable"
+        loading={loading}
       >
         <Column
           title={translate("Image")}
@@ -73,10 +78,14 @@ const Services = () => {
             </Space>
           )}
         />
-        <Column title={translate("Title")} dataIndex={translate(langUz ? "title" : "title_ru")} key="title" />
         <Column
-          title={translate("Description")}
-          dataIndex={translate(langUz ? "description" : "description_ru")}
+          title={translate("Title")}
+          dataIndex={translate(langUz ? "title" : "title_ru")}
+          key="title"
+        />
+        <Column
+          title={translate("Subtitle")}
+          dataIndex={translate(langUz ? "subtitle" : "subtitle_ru")}
           key="subtitle"
           render={(text) => (
             <Space size="middle">{text.length > 120? `${text.substring(0, 120)}...`: text}</Space>
@@ -84,11 +93,12 @@ const Services = () => {
         />
         <Column
           title="Action"
-          dataIndex="action"
           key="action"
           render={(_, record) => (
             <Space size="middle" key={record.id}>
-              <a onClick={() => editServiceOpen(record)}>{translate("Edit")}</a>
+              <a onClick={() => editCompanySlider(record)}>
+                {translate("Edit")}
+              </a>
               <Popconfirm
                 placement="leftBottom"
                 title={translate("Do you want to delete it")}
@@ -99,7 +109,7 @@ const Services = () => {
                     }}
                   />
                 }
-                // onConfirm={() => deleteHandler(record)}
+                onConfirm={() => deleteCompanySlider(record)}
                 okText={translate("Yes")}
                 cancelText={translate("No")}
               >
@@ -109,17 +119,17 @@ const Services = () => {
           )}
         />
       </Table>
-      <ServicesDrawer
+      <AddCompanySlider
         open={open}
         setOpen={setOpen}
         selected={selected}
         setSelected={setSelected}
-        edit={edit}
-        setEdit={setEdit}
-        fetchServices={fetchServices}
+        setIsEditing={setIsEditing}
+        isEditing={isEditing}
+        fetchCompanySlider={fetchCompanySlider}
       />
     </div>
   );
 };
 
-export default Services;
+export default CompanySlider;

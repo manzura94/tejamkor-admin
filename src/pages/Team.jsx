@@ -4,7 +4,7 @@ import { QuestionCircleOutlined } from "@ant-design/icons";
 import useLanguage from "../utils/useLanguage";
 import { authHost } from "../utils/https";
 import { team } from "../utils/urls";
-import TeamDrawer from "../pages/TeamDrawer";
+import TeamDrawer from "../Components/TeamDrawer";
 import { LangActive } from "../context/LangActive";
 import { LoadingContext } from "../context/LoadingContext";
 
